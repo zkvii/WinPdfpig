@@ -6,7 +6,7 @@
     /// <summary>
     /// Specifies the character collection associated with the <see cref="ICidFont"/> (CIDFont).
     /// </summary>
-    internal readonly struct CharacterIdentifierSystemInfo
+    public readonly struct CharacterIdentifierSystemInfo
     {
         /// <summary>
         /// Identifies the issuer of the character collection.
@@ -23,6 +23,12 @@
         /// </summary>
         public int Supplement { get; }
 
+        /// <summary>
+        /// Create a new <see cref="CharacterIdentifierSystemInfo"/>.
+        /// </summary>
+        /// <param name="registry"></param>
+        /// <param name="ordering"></param>
+        /// <param name="supplement"></param>
         public CharacterIdentifierSystemInfo(string registry, string ordering, int supplement)
         {
             Registry = registry;

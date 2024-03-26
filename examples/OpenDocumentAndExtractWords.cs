@@ -18,6 +18,9 @@
                 {
                     foreach (var word in page.GetWords())
                     {
+                       var fonts= page.Content.PageResourceStore.GetLoadedFonts();
+                       
+                        
                         if (previous != null)
                         {
                             var hasInsertedWhitespace = false;

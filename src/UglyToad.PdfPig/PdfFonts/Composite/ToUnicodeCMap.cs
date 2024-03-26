@@ -9,7 +9,7 @@
     /// Defines the information content (actual text) of the font
     /// as opposed to the display format.
     /// </summary>
-    internal class ToUnicodeCMap
+    public class ToUnicodeCMap
     {
         private readonly CMap? cMap;
 

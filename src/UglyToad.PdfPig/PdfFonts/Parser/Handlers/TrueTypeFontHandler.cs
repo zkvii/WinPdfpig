@@ -211,8 +211,13 @@
                     }
                 }
 
+                // var file = @"C:\Users\gjt\Desktop\sample.ttf";
+                // System.IO.File.WriteAllBytes(file, fontFile.ToArray());
+                
                 var font = TrueTypeFontParser.Parse(new TrueTypeDataBytes(new ByteArrayInputBytes(fontFile)));
 
+                
+                
                 return font;
             }
             catch (Exception ex)

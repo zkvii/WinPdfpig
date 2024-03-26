@@ -12,15 +12,24 @@
     using Filters;
     using Util;
 
-    internal class ResourceStore : IResourceStore
+    /// <summary>
+    /// a public resource store
+    /// </summary>
+    public class ResourceStore : IResourceStore
     {
         private readonly IPdfTokenScanner scanner;
         private readonly IFontFactory fontFactory;
         private readonly ILookupFilterProvider filterProvider;
         private readonly ParsingOptions parsingOptions;
 
-        private readonly Dictionary<IndirectReference, IFont> loadedFonts = new Dictionary<IndirectReference, IFont>();
-        private readonly Dictionary<NameToken, IFont> loadedDirectFonts = new Dictionary<NameToken, IFont>();
+        /// <summary>
+        /// The loaded fonts.
+        /// </summary>
+        public readonly Dictionary<IndirectReference, IFont> LoadedFonts = new();
+        /// <summary>
+        /// The loaded direct fonts.
+        /// </summary>
+        public readonly Dictionary<NameToken, IFont> LoadedDirectFonts = new Dictionary<NameToken, IFont>();
         private readonly StackDictionary<NameToken, IndirectReference> currentResourceState = new StackDictionary<NameToken, IndirectReference>();
 
         private readonly Dictionary<NameToken, DictionaryToken> extendedGraphicsStates = new Dictionary<NameToken, DictionaryToken>();
@@ -36,6 +45,13 @@
 
         private (NameToken? name, IFont? font) lastLoadedFont;
 
+        /// <summary>
+        /// Create a new resource store.
+        /// </summary>
+        /// <param name="scanner"></param>
+        /// <param name="fontFactory"></param>
+        /// <param name="filterProvider"></param>
+        /// <param name="parsingOptions"></param>
         public ResourceStore(IPdfTokenScanner scanner,
             IFontFactory fontFactory,
             ILookupFilterProvider filterProvider,
@@ -194,7 +210,7 @@
 
                     currentResourceState[NameToken.Create(pair.Key)] = reference;
 
-                    if (loadedFonts.ContainsKey(reference))
+                    if (LoadedFonts.ContainsKey(reference))
                     {
                         continue;
                     }
@@ -209,7 +225,7 @@
 
                     try
                     {
-                        loadedFonts[reference] = fontFactory.Get(fontObject);
+                        LoadedFonts[reference] = fontFactory.Get(fontObject);
                     }
                     catch
                     {
@@ -221,7 +237,7 @@
                 }
                 else if (pair.Value is DictionaryToken fd)
                 {
-                    loadedDirectFonts[NameToken.Create(pair.Key)] = fontFactory.Get(fd);
+                    LoadedDirectFonts[NameToken.Create(pair.Key)] = fontFactory.Get(fd);
                 }
                 else
                 {
@@ -240,9 +256,9 @@
             IFont? font;
             if (currentResourceState.TryGetValue(name, out var reference))
             {
-                loadedFonts.TryGetValue(reference, out font);
+                LoadedFonts.TryGetValue(reference, out font);
             }
-            else if (!loadedDirectFonts.TryGetValue(name, out font))
+            else if (!LoadedDirectFonts.TryGetValue(name, out font))
             {
                 return null;
             }
@@ -349,6 +365,16 @@
         public Shading GetShading(NameToken name)
         {
             return shadingsProperties[name];
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="NotImplementedException"></exception>
+        public Dictionary<IndirectReference, IFont> GetLoadedFonts()
+        {
+            return LoadedFonts;
         }
 
         public IReadOnlyDictionary<NameToken, PatternColor> GetPatterns()

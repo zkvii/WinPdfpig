@@ -41,7 +41,10 @@
         /// </summary>
         public MediaBox MediaBox { get; }
 
-        internal PageContent Content { get; }
+        /// <summary>
+        /// The content of the page. This includes the letters, fonts,paths, and images on the page.
+        /// </summary>
+        public PageContent Content { get; }
 
         /// <summary>
         /// The rotation of the page in degrees (clockwise). Valid values are 0, 90, 180 and 270.

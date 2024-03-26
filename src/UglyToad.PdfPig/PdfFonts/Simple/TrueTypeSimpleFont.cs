@@ -12,7 +12,10 @@
     using Fonts.TrueType;
     using Tokens;
 
-    internal sealed class TrueTypeSimpleFont : IFont
+    /// <summary>
+    /// A simple TrueType font.
+    /// </summary>
+    public sealed class TrueTypeSimpleFont : IFont
     {
         private static readonly TransformationMatrix DefaultTransformation =
             TransformationMatrix.FromValues(1 / 1000.0, 0, 0, 1 / 1000.0, 0, 0);
@@ -25,22 +28,47 @@
 
         private readonly Encoding? encoding;
 
-        private readonly TrueTypeFont? font;
+        /// <summary>
+        /// 
+        /// </summary>
+        public readonly TrueTypeFont? Font;
 
         private readonly int firstCharacter;
 
         private readonly double[] widths;
 
 #nullable disable
+        /// <summary>
+        /// The name of this font.
+        /// </summary>
         public NameToken Name { get; }
 #nullable enable
 
+        /// <summary>
+        /// Whether this font is vertical.
+        /// </summary>
         public bool IsVertical { get; }
 
+        /// <summary>
+        /// The details of this font.
+        /// </summary>
         public FontDetails Details { get; }
 
+        /// <summary>
+        /// The ToUnicode CMap for this font.
+        /// </summary>
         public ToUnicodeCMap ToUnicode { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="descriptor"></param>
+        /// <param name="toUnicodeCMap"></param>
+        /// <param name="encoding"></param>
+        /// <param name="font"></param>
+        /// <param name="firstCharacter"></param>
+        /// <param name="widths"></param>
         public TrueTypeSimpleFont(
             NameToken name,
             FontDescriptor? descriptor,
@@ -52,7 +80,7 @@
         {
             this.descriptor = descriptor;
             this.encoding = encoding;
-            this.font = font;
+            this.Font = font;
             this.firstCharacter = firstCharacter;
             this.widths = widths;
 
@@ -64,12 +92,24 @@
                       ?? FontDetails.GetDefault(Name?.Data);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <param name="codeLength"></param>
+        /// <returns></returns>
         public int ReadCharacterCode(IInputBytes bytes, out int codeLength)
         {
             codeLength = 1;
             return bytes.CurrentByte;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="characterCode"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public bool TryGetUnicode(int characterCode, [NotNullWhen(true)] out string? value)
         {
             value = null;
@@ -148,9 +188,9 @@
                 fromFont = false;
                 width = widths[index];
             }
-            else if (font != null)
+            else if (Font != null)
             {
-                if (!font.TryGetAdvanceWidth(characterCode, out width))
+                if (!Font.TryGetAdvanceWidth(characterCode, out width))
                 {
                     width = boundingBoxPreTransform;
                 }
@@ -184,9 +224,9 @@
         {
             var scale = 1000.0;
 
-            if (font?.TableRegister.HeaderTable != null)
+            if (Font?.TableRegister.HeaderTable != null)
             {
-                scale = font.GetUnitsPerEm();
+                scale = Font.GetUnitsPerEm();
             }
 
             return TransformationMatrix.FromValues(1 / scale, 0, 0, 1 / scale, 0, 0);
@@ -196,17 +236,17 @@
         {
             fromFont = true;
 
-            if (font is null)
+            if (Font is null)
             {
                 return descriptor!.BoundingBox;
             }
 
-            if (font.TryGetBoundingBox(characterCode, CharacterCodeToGlyphId, out var bounds))
+            if (Font.TryGetBoundingBox(characterCode, CharacterCodeToGlyphId, out var bounds))
             {
                 return bounds;
             }
 
-            if (font.TryGetAdvanceWidth(characterCode, out var width))
+            if (Font.TryGetAdvanceWidth(characterCode, out var width))
             {
                 return new PdfRectangle(0, 0, width, 0);
             }
@@ -224,7 +264,7 @@
             }
 
             if (descriptor is null || !unicodeValuesCache.TryGetValue(characterCode, out var unicode)
-                                   || font!.TableRegister.CMapTable is null
+                                   || Font!.TableRegister.CMapTable is null
                                    || encoding is null
                                    || !encoding.CodeToNameMap.TryGetValue(characterCode, out var name)
                                    || name is null)
@@ -239,63 +279,63 @@
 
             var glyphId = 0;
 
-            if (HasFlag(descriptor.Flags, FontDescriptorFlags.Symbolic) && font.WindowsSymbolCMap != null)
+            if (HasFlag(descriptor.Flags, FontDescriptorFlags.Symbolic) && Font.WindowsSymbolCMap != null)
             {
                 const int startRangeF000 = 0xF000;
                 const int startRangeF100 = 0xF100;
                 const int startRangeF200 = 0xF200;
 
                 // (3, 0) - (Windows, Symbol)
-                glyphId = font.WindowsSymbolCMap.CharacterCodeToGlyphIndex(characterCode);
+                glyphId = Font.WindowsSymbolCMap.CharacterCodeToGlyphIndex(characterCode);
 
                 if (glyphId == 0 && characterCode >= 0 && characterCode <= 0xFF)
                 {
                     // CMap may use one of the following code ranges, so that we have to add the high byte to get the mapped value.
 
                     // F000 - F0FF
-                    glyphId = font.WindowsSymbolCMap.CharacterCodeToGlyphIndex(characterCode + startRangeF000);
+                    glyphId = Font.WindowsSymbolCMap.CharacterCodeToGlyphIndex(characterCode + startRangeF000);
 
                     if (glyphId == 0)
                     {
                         // F100 - F1FF
-                        glyphId = font.WindowsSymbolCMap.CharacterCodeToGlyphIndex(characterCode + startRangeF100);
+                        glyphId = Font.WindowsSymbolCMap.CharacterCodeToGlyphIndex(characterCode + startRangeF100);
                     }
 
                     if (glyphId == 0)
                     {
                         // F200 - F2FF
-                        glyphId = font.WindowsSymbolCMap.CharacterCodeToGlyphIndex(characterCode + startRangeF200);
+                        glyphId = Font.WindowsSymbolCMap.CharacterCodeToGlyphIndex(characterCode + startRangeF200);
                     }
                 }
 
                 // Handle fonts incorrectly set to symbolic.
-                if (glyphId == 0 && font.WindowsUnicodeCMap != null && !string.IsNullOrEmpty(unicode))
+                if (glyphId == 0 && Font.WindowsUnicodeCMap != null && !string.IsNullOrEmpty(unicode))
                 {
-                    glyphId = font.WindowsUnicodeCMap.CharacterCodeToGlyphIndex(unicode[0]);
+                    glyphId = Font.WindowsUnicodeCMap.CharacterCodeToGlyphIndex(unicode[0]);
                 }
             }
             else
             {
                 // (3, 1) - (Windows, Unicode)
-                if (font.WindowsUnicodeCMap != null && !string.IsNullOrEmpty(unicode))
+                if (Font.WindowsUnicodeCMap != null && !string.IsNullOrEmpty(unicode))
                 {
-                    glyphId = font.WindowsUnicodeCMap.CharacterCodeToGlyphIndex(unicode[0]);
+                    glyphId = Font.WindowsUnicodeCMap.CharacterCodeToGlyphIndex(unicode[0]);
                 }
 
                 if (glyphId == 0
-                    && font.MacRomanCMap != null
+                    && Font.MacRomanCMap != null
                     && MacOsRomanEncoding.Instance.NameToCodeMap.TryGetValue(name, out var macCode))
                 {
                     // (1, 0) - (Macintosh, Roman)
 
-                    glyphId = font.MacRomanCMap.CharacterCodeToGlyphIndex(macCode);
+                    glyphId = Font.MacRomanCMap.CharacterCodeToGlyphIndex(macCode);
                 }
 
-                if (glyphId == 0 && font.TableRegister.PostScriptTable != null)
+                if (glyphId == 0 && Font.TableRegister.PostScriptTable != null)
                 {
-                    for (var i = 0; i < font.TableRegister.PostScriptTable.GlyphNames.Count; i++)
+                    for (var i = 0; i < Font.TableRegister.PostScriptTable.GlyphNames.Count; i++)
                     {
-                        var glyphName = font.TableRegister.PostScriptTable.GlyphNames[i];
+                        var glyphName = Font.TableRegister.PostScriptTable.GlyphNames[i];
 
                         if (string.Equals(glyphName, name, StringComparison.OrdinalIgnoreCase))
                         {
@@ -328,13 +368,13 @@
         /// <inheritdoc/>
         public bool TryGetPath(int characterCode, [NotNullWhen(true)] out IReadOnlyList<PdfSubpath>? path)
         {
-            if (font is null)
+            if (Font is null)
             {
                 path = null;
                 return false;
             }
 
-            return font.TryGetPath(characterCode, CharacterCodeToGlyphId, out path);
+            return Font.TryGetPath(characterCode, CharacterCodeToGlyphId, out path);
         }
 
         /// <inheritdoc/>

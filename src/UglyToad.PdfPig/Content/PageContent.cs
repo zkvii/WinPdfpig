@@ -16,13 +16,16 @@
     /// This should contain a replayable stack of drawing instructions for page content
     /// from a content stream in addition to lazily evaluated state such as text on the page or images.
     /// </remarks>
-    internal class PageContent
+    public class PageContent
     {
         private readonly IReadOnlyList<Union<XObjectContentRecord, InlineImage>> images;
         private readonly IReadOnlyList<MarkedContentElement> markedContents;
         private readonly IPdfTokenScanner pdfScanner;
         private readonly ILookupFilterProvider filterProvider;
-        private readonly IResourceStore resourceStore;
+        /// <summary>
+        ///  The resource store for the page content. fonts file and so on
+        /// </summary>
+        public readonly IResourceStore PageResourceStore;
 
         internal IReadOnlyList<IGraphicsStateOperation> GraphicsStateOperations { get; }
 
@@ -47,7 +50,7 @@
             this.markedContents = markedContents;
             this.pdfScanner = pdfScanner ?? throw new ArgumentNullException(nameof(pdfScanner));
             this.filterProvider = filterProvider ?? throw new ArgumentNullException(nameof(filterProvider));
-            this.resourceStore = resourceStore ?? throw new ArgumentNullException(nameof(resourceStore));
+            this.PageResourceStore = resourceStore ?? throw new ArgumentNullException(nameof(resourceStore));
         }
 
         public IEnumerable<IPdfImage> GetImages()
@@ -56,7 +59,7 @@
             {
                 if (image.TryGetFirst(out var xObjectContentRecord))
                 {
-                    yield return XObjectFactory.ReadImage(xObjectContentRecord, pdfScanner, filterProvider, resourceStore);
+                    yield return XObjectFactory.ReadImage(xObjectContentRecord, pdfScanner, filterProvider, PageResourceStore);
                 }
                 else if (image.TryGetSecond(out var inlineImage))
                 {

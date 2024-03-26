@@ -1,5 +1,6 @@
 ﻿namespace UglyToad.PdfPig.Content
 {
+    using Core;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Graphics.Colors;
@@ -66,5 +67,12 @@
         /// Get the shading corresponding to the name.
         /// </summary>
         Shading GetShading(NameToken name);
+
+
+        /// <summary>
+        /// exposure loaded fonts
+        /// </summary>
+        /// <returns></returns>
+        Dictionary<IndirectReference, IFont> GetLoadedFonts();
     }
 }

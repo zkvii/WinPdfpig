@@ -10,7 +10,7 @@
     /// The CMap (character code map) maps character codes to character identifiers (CIDs).
     /// The set of characters which a CMap refers to is the "character set" (charset).
     /// </summary>
-    internal class CMap
+    public class CMap
     {
         public CharacterIdentifierSystemInfo Info { get; }
 

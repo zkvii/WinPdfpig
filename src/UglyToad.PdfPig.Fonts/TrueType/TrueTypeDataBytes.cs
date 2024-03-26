@@ -9,8 +9,14 @@
     /// </summary>
     public class TrueTypeDataBytes
     {
-        private readonly byte[] internalBuffer = new byte[16];
-        private readonly IInputBytes inputBytes;
+        /// <summary>
+        /// The internal buffer used for reading data.
+        /// </summary>
+        public readonly byte[] InternalBuffer = new byte[16];
+        /// <summary>
+        /// The input bytes for font data.
+        /// </summary>
+        public readonly IInputBytes InputBytes;
 
         /// <summary>
         /// Create a new <see cref="TrueTypeDataBytes"/>.
@@ -22,18 +28,18 @@
         /// </summary>
         public TrueTypeDataBytes(IInputBytes inputBytes)
         {
-            this.inputBytes = inputBytes ?? throw new ArgumentNullException(nameof(inputBytes));
+            this.InputBytes = inputBytes ?? throw new ArgumentNullException(nameof(inputBytes));
         }
 
         /// <summary>
         /// The current position in the data.
         /// </summary>
-        public long Position => inputBytes.CurrentOffset;
+        public long Position => InputBytes.CurrentOffset;
 
         /// <summary>
         /// The length of the data in bytes.
         /// </summary>
-        public long Length => inputBytes.Length;
+        public long Length => InputBytes.Length;
 
         /// <summary>
         /// Read a 32-fixed floating point value.
@@ -50,9 +56,9 @@
         /// </summary>
         public short ReadSignedShort()
         {
-            ReadBuffered(internalBuffer, 2);
+            ReadBuffered(InternalBuffer, 2);
 
-            return unchecked((short)((internalBuffer[0] << 8) + (internalBuffer[1] << 0)));
+            return unchecked((short)((InternalBuffer[0] << 8) + (InternalBuffer[1] << 0)));
         }
 
         /// <summary>
@@ -60,9 +66,9 @@
         /// </summary>
         public ushort ReadUnsignedShort()
         {
-            ReadBuffered(internalBuffer, 2);
+            ReadBuffered(InternalBuffer, 2);
 
-            return (ushort)((internalBuffer[0] << 8) + (internalBuffer[1] << 0));
+            return (ushort)((InternalBuffer[0] << 8) + (InternalBuffer[1] << 0));
         }
 
         /// <summary>
@@ -70,9 +76,9 @@
         /// </summary>
         public byte ReadByte()
         {
-            ReadBuffered(internalBuffer, 1);
+            ReadBuffered(InternalBuffer, 1);
 
-            return internalBuffer[0];
+            return InternalBuffer[0];
         }
 
         /// <summary>
@@ -85,7 +91,7 @@
                 return result;
             }
 
-            throw new InvalidOperationException($"Could not read Tag from TrueType file at {inputBytes.CurrentOffset}.");
+            throw new InvalidOperationException($"Could not read Tag from TrueType file at {InputBytes.CurrentOffset}.");
         }
 
         /// <summary>
@@ -114,9 +120,9 @@
         /// </summary>
         public uint ReadUnsignedInt()
         {
-            ReadBuffered(internalBuffer, 4);
+            ReadBuffered(InternalBuffer, 4);
 
-            return (uint)(((long)internalBuffer[0] << 24) + ((long)internalBuffer[1] << 16) + (internalBuffer[2] << 8) + (internalBuffer[3] << 0));
+            return (uint)(((long)InternalBuffer[0] << 24) + ((long)InternalBuffer[1] << 16) + (InternalBuffer[2] << 8) + (InternalBuffer[3] << 0));
         }
 
         /// <summary>
@@ -124,9 +130,9 @@
         /// </summary>
         public int ReadSignedInt()
         {
-            ReadBuffered(internalBuffer, 4);
+            ReadBuffered(InternalBuffer, 4);
 
-            return (internalBuffer[0] << 24) + (internalBuffer[1] << 16) + (internalBuffer[2] << 8) + (internalBuffer[3] << 0);
+            return (InternalBuffer[0] << 24) + (InternalBuffer[1] << 16) + (InternalBuffer[2] << 8) + (InternalBuffer[3] << 0);
         }
 
         /// <summary>
@@ -167,7 +173,7 @@
         /// </summary>
         public void Seek(long position)
         {
-            inputBytes.Seek(position);
+            InputBytes.Seek(position);
         }
 
         /// <summary>
@@ -175,9 +181,9 @@
         /// </summary>
         public int ReadSignedByte()
         {
-            ReadBuffered(internalBuffer, 1);
+            ReadBuffered(InternalBuffer, 1);
 
-            var signedByte = internalBuffer[0];
+            var signedByte = InternalBuffer[0];
 
             return signedByte < 127 ? signedByte : signedByte - 256;
         }
@@ -241,12 +247,12 @@
         /// <inheritdoc />
         public override string ToString()
         {
-            return $"@: {Position} of {inputBytes.Length} bytes.";
+            return $"@: {Position} of {InputBytes.Length} bytes.";
         }
 
         private bool ReadBuffered(byte[] buffer, int length)
         {
-            var read = inputBytes.Read(buffer, length);
+            var read = InputBytes.Read(buffer, length);
             if (read < length)
             {
                 return false;

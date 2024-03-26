@@ -11,8 +11,8 @@
     /// </summary>
     public class ByteArrayInputBytes : IInputBytes
     {
-        private readonly int upperBound;
-        private readonly byte[] bytes;
+        public readonly int upperBound;
+        public readonly byte[] bytes;
 
         /// <summary>
         /// Create a new <see cref="ByteArrayInputBytes"/>.

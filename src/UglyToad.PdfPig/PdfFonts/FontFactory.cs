@@ -1,5 +1,7 @@
 ﻿namespace UglyToad.PdfPig.PdfFonts
 {
+    using Composite;
+    using Fonts.TrueType;
     using System;
     using System.Collections.Generic;
     using Logging;
@@ -45,6 +47,12 @@
             }
 
             throw new NotImplementedException($"Parsing not implemented for fonts of type: {subtype}, please submit a pull request or an issue.");
+        }
+
+        public byte[] GetFontBytes(TrueTypeFont trueTypeFont)
+        {
+            
+            return null;
         }
     }
 

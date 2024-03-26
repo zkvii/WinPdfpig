@@ -5,7 +5,7 @@
     /// <summary>
     /// Associates the beginning and end of a range of character codes with the starting CID for the range.
     /// </summary>
-    internal readonly struct CidRange
+    public readonly struct CidRange
     {
         /// <summary>
         /// The beginning of the range of character codes.

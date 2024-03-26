@@ -56,34 +56,35 @@
 
             var choices = string.Join(Environment.NewLine, examples.Select(x => $"{x.Key}: {x.Value.name}"));
 
-            Console.WriteLine(choices);
-            Console.WriteLine();
+            // Console.WriteLine(choices);
+            // Console.WriteLine();
 
-            do
-            {
-                Console.Write("Enter a number to pick an example (enter 'q' to exit):");
+            // do
+            // {
+                // Console.Write("Enter a number to pick an example (enter 'q' to exit):");
 
-                var val = Console.ReadLine();
+                // var val = "1";
 
-                if (!int.TryParse(val, out var opt) || !examples.TryGetValue(opt, out var act))
-                {
-                    if (string.Equals(val, "q", StringComparison.OrdinalIgnoreCase))
-                    {
-                        return;
-                    }
+                // if (!int.TryParse(val, out var opt) || !examples.TryGetValue(opt, out var act))
+                // {
+                //     if (string.Equals(val, "q", StringComparison.OrdinalIgnoreCase))
+                //     {
+                //         return;
+                //     }
+                //
+                //     // Console.WriteLine($"No option with value: {val}.");
+                //     // continue;
+                // }
 
-                    Console.WriteLine($"No option with value: {val}.");
-                    continue;
-                }
-
-                act.action.Invoke();
+               examples.TryGetValue(1,out var act);
+               act.action();
 
                 Console.WriteLine();
                 Console.WriteLine();
 
-                Console.WriteLine(choices);
+                // Console.WriteLine(choices);
                 Console.WriteLine();
-            } while (true);
+            // } while (true);
         }
     }
 }
