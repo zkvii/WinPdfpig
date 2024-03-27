@@ -151,7 +151,7 @@ namespace UglyToad.PdfPig.Content
         /// </summary>
         public override string ToString()
         {
-            return $"{Type} - {Name} [{string.Join(",", Intent)}]: {MarkedContent?.ToString()}";
+            return $"{Type} - {Name} [{string.Join(",", Intent!)}]: {MarkedContent?.ToString()}";
         }
     }
 }

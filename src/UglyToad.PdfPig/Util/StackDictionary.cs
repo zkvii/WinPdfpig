@@ -5,9 +5,9 @@ namespace UglyToad.PdfPig.Util
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
 
-    internal class StackDictionary<K, V>
+    internal class StackDictionary<K, V> where K : notnull
     {
-        private readonly List<Dictionary<K, V>> values = new List<Dictionary<K, V>>();
+        private readonly List<Dictionary<K, V>> values = [];
 
         public V this[K key]
         {

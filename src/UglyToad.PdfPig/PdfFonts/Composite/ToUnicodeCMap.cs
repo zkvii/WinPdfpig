@@ -23,6 +23,10 @@
         /// </summary>
         public bool IsUsingIdentityAsUnicodeMap { get; }
 
+        /// <summary>
+        /// Creates a new <see cref="ToUnicodeCMap"/>.
+        /// </summary>
+        /// <param name="cMap"></param>
         public ToUnicodeCMap(CMap? cMap)
         {
             this.cMap = cMap;
@@ -33,6 +37,12 @@
             }
         }
 
+        /// <summary>
+        /// Get the Unicode value for the given character code.
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public bool TryGet(int code, [NotNullWhen(true)] out string? value)
         {
             value = null;
@@ -45,6 +55,11 @@
             return cMap.TryConvertToUnicode(code, out value);
         }
 
+        /// <summary>
+        /// Read the character code from the input bytes.
+        /// </summary>
+        /// <param name="inputBytes"></param>
+        /// <returns></returns>
         public int ReadCode(IInputBytes inputBytes)
         {
             return cMap!.ReadCode(inputBytes);

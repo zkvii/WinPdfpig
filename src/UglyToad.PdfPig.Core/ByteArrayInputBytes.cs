@@ -11,7 +11,13 @@
     /// </summary>
     public class ByteArrayInputBytes : IInputBytes
     {
+        /// <summary>
+        /// byte upperBound.
+        /// </summary>
         public readonly int upperBound;
+        /// <summary>
+        /// bytes
+        /// </summary>
         public readonly byte[] bytes;
 
         /// <summary>

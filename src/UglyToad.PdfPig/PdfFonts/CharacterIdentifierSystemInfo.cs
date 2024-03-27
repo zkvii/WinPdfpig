@@ -36,6 +36,10 @@
             Supplement = supplement;
         }
 
+        /// <summary>
+        /// Get the string representation of the character collection.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return $"{Registry}-{Ordering}-{Supplement.ToString(CultureInfo.InvariantCulture)}";

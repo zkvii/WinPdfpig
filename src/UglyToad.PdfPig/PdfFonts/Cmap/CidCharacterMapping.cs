@@ -24,6 +24,10 @@
             DestinationCid = destinationCid;
         }
 
+        /// <summary>
+        /// Get the string representation of the mapping.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return $"Code {SourceCharacterCode} -> CID {DestinationCid}";

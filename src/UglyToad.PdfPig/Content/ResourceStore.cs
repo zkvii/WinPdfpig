@@ -63,6 +63,13 @@
             this.parsingOptions = parsingOptions;
         }
 
+        /// <summary>
+        /// Load the resource dictionary.
+        /// </summary>
+        /// <param name="resourceDictionary"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="PdfDocumentFormatException"></exception>
+        /// <exception cref="NotImplementedException"></exception>
         public void LoadResourceDictionary(DictionaryToken resourceDictionary)
         {
             lastLoadedFont = (null, null);
@@ -190,6 +197,9 @@
             }
         }
 
+        /// <summary>
+        /// Unload the resource dictionary.
+        /// </summary>
         public void UnloadResourceDictionary()
         {
             lastLoadedFont = (null, null);
@@ -246,6 +256,11 @@
             }
         }
 
+        /// <summary>
+        /// Get the font.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public IFont? GetFont(NameToken name)
         {
             if (lastLoadedFont.name == name)
@@ -268,6 +283,12 @@
             return font;
         }
 
+        /// <summary>
+        /// Get the font directly.
+        /// </summary>
+        /// <param name="fontReferenceToken"></param>
+        /// <returns></returns>
+        /// <exception cref="PdfDocumentFormatException"></exception>
         public IFont GetFontDirectly(IndirectReferenceToken fontReferenceToken)
         {
             lastLoadedFont = (null, null);
@@ -282,6 +303,13 @@
             return font;
         }
 
+        /// <summary>
+        /// Get the named color space.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="namedToken"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public bool TryGetNamedColorSpace(NameToken? name, out ResourceColorSpace namedToken)
         {
             namedToken = default(ResourceColorSpace);
@@ -301,6 +329,13 @@
             return true;
         }
 
+        /// <summary>
+        /// Get the color space details.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="dictionary"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public ColorSpaceDetails GetColorSpaceDetails(NameToken? name, DictionaryToken? dictionary)
         {            
             dictionary ??= new DictionaryToken(new Dictionary<NameToken, IToken>());
@@ -341,6 +376,12 @@
             throw new InvalidOperationException($"Could not find color space for token '{name}'.");
         }
 
+        /// <summary>
+        /// Get the shading pattern.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="stream"></param>
+        /// <returns></returns>
         public bool TryGetXObject(NameToken name, [NotNullWhen(true)] out StreamToken? stream)
         {
             stream = null;
@@ -352,16 +393,31 @@
             return DirectObjectFinder.TryGet(new IndirectReferenceToken(indirectReference), scanner, out stream);
         }
 
+        /// <summary>
+        /// Get the extended graphics state dictionary.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public DictionaryToken GetExtendedGraphicsStateDictionary(NameToken name)
         {
             return extendedGraphicsStates[name];
         }
 
+        /// <summary>
+        /// Get the marked content properties dictionary.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public DictionaryToken? GetMarkedContentPropertiesDictionary(NameToken name)
         {
-            return markedContentProperties.TryGetValue(name, out var result) ? result : null;
+            return markedContentProperties.GetValueOrDefault(name);
         }
 
+        /// <summary>
+        /// Get the shading dictionary.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public Shading GetShading(NameToken name)
         {
             return shadingsProperties[name];
@@ -377,6 +433,10 @@
             return LoadedFonts;
         }
 
+        /// <summary>
+        ///     Get the loaded direct fonts.
+        /// </summary>
+        /// <returns></returns>
         public IReadOnlyDictionary<NameToken, PatternColor> GetPatterns()
         {
             return patternsProperties;

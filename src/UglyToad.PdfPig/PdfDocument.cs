@@ -33,7 +33,11 @@
         private readonly ILookupFilterProvider filterProvider;
         private readonly BookmarksProvider bookmarksProvider;
         private readonly ParsingOptions parsingOptions;
-        private readonly Pages pages;
+        
+        /// <summary>
+        ///  expose for custom factory register
+        /// </summary>
+        public readonly Pages pages;
         private readonly NamedDestinations namedDestinations;
 
         /// <summary>

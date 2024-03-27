@@ -49,7 +49,7 @@
             throw new NotImplementedException($"Parsing not implemented for fonts of type: {subtype}, please submit a pull request or an issue.");
         }
 
-        public byte[] GetFontBytes(TrueTypeFont trueTypeFont)
+        public byte[]? GetFontBytes(TrueTypeFont trueTypeFont)
         {
             
             return null;

@@ -249,7 +249,7 @@ namespace UglyToad.PdfPig.Writer.Xmp
         /// </summary>
         private static XDocument MergeXmpXdocuments(params XDocument[] xDocuments)
         {
-            XDocument document = new XDocument(xDocuments.FirstOrDefault());
+            XDocument document = new XDocument(xDocuments.FirstOrDefault() ?? throw new InvalidOperationException());
             foreach (XDocument xdocOriginal in xDocuments.Skip(1).Where(doc => doc != null))
             {
                 XDocument xdoc = new XDocument(xdocOriginal);

@@ -3,11 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using Tokens;
 
     internal class PdfDedupStreamWriter : PdfStreamWriter
     {
-        private readonly Dictionary<byte[], IndirectReferenceToken> hashes = new Dictionary<byte[], IndirectReferenceToken>(new FNVByteComparison());
+        private readonly Dictionary<byte[], IndirectReferenceToken> hashes = new Dictionary<byte[], IndirectReferenceToken>(new FnvByteComparison());
 
         public PdfDedupStreamWriter(
             Stream stream,
@@ -69,25 +70,29 @@
             base.Dispose();
         }
 
-        class FNVByteComparison : IEqualityComparer<byte[]>
+        class FnvByteComparison : IEqualityComparer<byte[]>
         {
-            public bool Equals(byte[] x, byte[] y)
+            public bool Equals(byte[]? x, byte[]? y)
             {
-                if (x.Length != y.Length)
-                {
-                    return false;
-                }
-
-                for (var i = 0; i < x.Length; i++)
-                {
-                    if (x[i] != y[i])
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
+                return x?.SequenceEqual(y!) ?? y == null;
             }
+            // public bool Equals(byte[]? x, byte[]? y)
+            // {
+            //     if (x.Length != y.Length)
+            //     {
+            //         return false;
+            //     }
+            //
+            //     for (var i = 0; i < x.Length; i++)
+            //     {
+            //         if (x[i] != y[i])
+            //         {
+            //             return false;
+            //         }
+            //     }
+            //
+            //     return true;
+            // }
 
             public int GetHashCode(byte[] obj)
             {
@@ -109,7 +114,7 @@
             /// <summary>
             /// The starting point of the FNV hash.
             /// </summary>
-            public const int Offset = unchecked((int)2166136261);
+            private const int Offset = unchecked((int)2166136261);
 
             /// <summary>
             /// The prime number used to compute the FNV hash.

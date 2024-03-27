@@ -12,6 +12,9 @@
     /// </summary>
     public class CMap
     {
+        /// <summary>
+        /// Information about the character identifier system.
+        /// </summary>
         public CharacterIdentifierSystemInfo Info { get; }
 
         /// <summary>
@@ -29,6 +32,9 @@
         /// </summary>
         public string? Version { get; }
 
+        /// <summary>
+        /// Maps from character codes to Unicode characters.
+        /// </summary>
         public IReadOnlyDictionary<int, string> BaseFontCharacterMap { get; }
 
         /// <summary>
@@ -51,8 +57,14 @@
         /// </summary>
         public WritingMode WritingMode { get; }
 
+        /// <summary>
+        /// Does this CMap contain any CID mappings?
+        /// </summary>
         public bool HasCidMappings => CidCharacterMappings.Count > 0 || CidRanges.Count > 0;
 
+        /// <summary>
+        /// Does this CMap contain any Unicode mappings?
+        /// </summary>
         public bool HasUnicodeMappings => BaseFontCharacterMap.Count > 0;
 
         /// <summary>
@@ -62,6 +74,19 @@
         private readonly int minCodeLength = 4;
         private readonly int maxCodeLength;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="CMap"/>.
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="type"></param>
+        /// <param name="wMode"></param>
+        /// <param name="name"></param>
+        /// <param name="version"></param>
+        /// <param name="baseFontCharacterMap"></param>
+        /// <param name="codespaceRanges"></param>
+        /// <param name="cidRanges"></param>
+        /// <param name="cidCharacterMappings"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public CMap(CharacterIdentifierSystemInfo info, int type, int wMode, string name,
             string? version, 
             IReadOnlyDictionary<int, string> baseFontCharacterMap, 
@@ -141,11 +166,21 @@
         }
 
 
+        /// <summary>
+        /// Get the string representation of the CMap.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return Name;
         }
 
+        /// <summary>
+        /// Read the character code from the input bytes.
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
+        /// <exception cref="PdfDocumentFormatException"></exception>
         public int ReadCode(IInputBytes bytes)
         {
             if (hasEmptyCodespace)

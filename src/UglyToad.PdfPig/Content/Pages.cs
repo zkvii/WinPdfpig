@@ -10,13 +10,19 @@
     using Tokens;
     using Util;
 
-    internal sealed class Pages : IDisposable
+    /// <summary>
+    ///  Pages in a PDF document.
+    /// </summary>
+    public sealed class Pages : IDisposable
     {
         private readonly Dictionary<Type, object> pageFactoryCache;
         private readonly PageFactory defaultPageFactory;
         private readonly IPdfTokenScanner pdfScanner;
         private readonly Dictionary<int, PageTreeNode> pagesByNumber;
 
+        /// <summary>
+        ///     pages count
+        /// </summary>
         public int Count => pagesByNumber.Count;
 
         /// <summary>
@@ -106,7 +112,13 @@
             return page;
         }
 
-        internal void AddPageFactory<TPage>(IPageFactory<TPage> pageFactory)
+        /// <summary>
+        /// Add a page factory for the given page type.
+        /// </summary>
+        /// <param name="pageFactory"></param>
+        /// <typeparam name="TPage"></typeparam>
+        /// <exception cref="InvalidOperationException"></exception>
+        public void AddPageFactory<TPage>(IPageFactory<TPage> pageFactory)
         {
             Type type = typeof(TPage);
             if (pageFactoryCache.ContainsKey(type))
@@ -118,7 +130,13 @@
         }
 
 #if NET6_0_OR_GREATER
-        internal void AddPageFactory<TPage, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] TPageFactory>() where TPageFactory : IPageFactory<TPage>
+        /// <summary>
+        /// Add a page factory for the given page type.
+        /// </summary>
+        /// <typeparam name="TPage"></typeparam>
+        /// <typeparam name="TPageFactory"></typeparam>
+        /// <exception cref="InvalidOperationException"></exception>
+        public void AddPageFactory<TPage, [System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicConstructors)] TPageFactory>() where TPageFactory : IPageFactory<TPage>
 #else
         internal void AddPageFactory<TPage, TPageFactory>() where TPageFactory : IPageFactory<TPage>
 #endif
@@ -180,6 +198,9 @@
             return null;
         }
 
+        /// <summary>
+        /// Dispose the page factory cache.
+        /// </summary>
         public void Dispose()
         {
             foreach (var key in pageFactoryCache.Keys)

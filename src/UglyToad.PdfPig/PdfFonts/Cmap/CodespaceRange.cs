@@ -83,6 +83,10 @@
             return false;
         }
 
+        /// <summary>
+        ///     Returns a string representation of this object.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return $"Length {CodeLength}: {StartInt} -> {EndInt}";

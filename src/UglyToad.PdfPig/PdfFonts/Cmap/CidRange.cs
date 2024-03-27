@@ -69,6 +69,10 @@
             return false;
         }
 
+        /// <summary>
+        ///     Returns a string representation of this object.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return $"CID {cid}: Code {firstCharacterCode} -> {lastCharacterCode}";

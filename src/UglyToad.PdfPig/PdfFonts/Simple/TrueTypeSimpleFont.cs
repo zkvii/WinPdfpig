@@ -158,6 +158,12 @@
             return value != null;
         }
 
+        /// <summary>
+        ///     Get the bounding box for the character code.
+        /// </summary>
+        /// <param name="characterCode"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public CharacterBoundingBox GetBoundingBox(int characterCode)
         {
             if (boundingBoxCache.TryGetValue(characterCode, out var cached))
@@ -220,6 +226,10 @@
             return result;
         }
 
+        /// <summary>
+        ///    Get the transformation matrix for this font.
+        /// </summary>
+        /// <returns></returns>
         public TransformationMatrix GetFontMatrix()
         {
             var scale = 1000.0;

@@ -29,10 +29,19 @@
 
         internal IReadOnlyList<IGraphicsStateOperation> GraphicsStateOperations { get; }
 
+        /// <summary>
+        /// The letters on the page.
+        /// </summary>
         public IReadOnlyList<Letter> Letters { get; }
 
+        /// <summary>
+        /// The paths on the page.
+        /// </summary>
         public IReadOnlyList<PdfPath> Paths { get; }
 
+        /// <summary>
+        /// The number of images on the page.
+        /// </summary>
         public int NumberOfImages => images.Count;
 
         internal PageContent(IReadOnlyList<IGraphicsStateOperation> graphicsStateOperations, IReadOnlyList<Letter> letters,
@@ -53,6 +62,10 @@
             this.PageResourceStore = resourceStore ?? throw new ArgumentNullException(nameof(resourceStore));
         }
 
+        /// <summary>
+        /// Get the images on the page.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<IPdfImage> GetImages()
         {
             foreach (var image in images)
@@ -68,6 +81,10 @@
             }
         }
 
+        /// <summary>
+        /// Get the marked content elements on the page.
+        /// </summary>
+        /// <returns></returns>
         public IReadOnlyList<MarkedContentElement> GetMarkedContents() => markedContents;
     }
 }
