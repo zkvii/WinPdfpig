@@ -15,8 +15,11 @@
     /// </summary>
     public sealed class Pages : IDisposable
     {
-        private readonly Dictionary<Type, object> pageFactoryCache;
-        private readonly PageFactory defaultPageFactory;
+        /// <summary>
+        /// expose external register
+        /// </summary>
+        public readonly Dictionary<Type, object> PageFactoryCache;
+        public readonly PageFactory defaultPageFactory;
         private readonly IPdfTokenScanner pdfScanner;
         private readonly Dictionary<int, PageTreeNode> pagesByNumber;
 
@@ -35,7 +38,7 @@
             PageTreeNode pageTree,
             Dictionary<int, PageTreeNode> pagesByNumber)
         {
-            pageFactoryCache = new Dictionary<Type, object>();
+            PageFactoryCache = new Dictionary<Type, object>();
 
             defaultPageFactory = (PageFactory)pageFactory ?? throw new ArgumentNullException(nameof(pageFactory));
             this.pdfScanner = pdfScanner ?? throw new ArgumentNullException(nameof(pdfScanner));
@@ -50,7 +53,7 @@
 
         internal TPage GetPage<TPage>(int pageNumber, NamedDestinations namedDestinations, ParsingOptions parsingOptions)
         {
-            if (pageFactoryCache.TryGetValue(typeof(TPage), out var f) && f is IPageFactory<TPage> pageFactory)
+            if (PageFactoryCache.TryGetValue(typeof(TPage), out var f) && f is IPageFactory<TPage> pageFactory)
             {
                 return GetPage(pageFactory, pageNumber, namedDestinations, parsingOptions);
             }
@@ -121,12 +124,12 @@
         public void AddPageFactory<TPage>(IPageFactory<TPage> pageFactory)
         {
             Type type = typeof(TPage);
-            if (pageFactoryCache.ContainsKey(type))
+            if (PageFactoryCache.ContainsKey(type))
             {
                 throw new InvalidOperationException($"Could not add page factory for page type '{type}' as it was already added.");
             }
 
-            pageFactoryCache.Add(type, pageFactory);
+            PageFactoryCache.Add(type, pageFactory);
         }
 
 #if NET6_0_OR_GREATER
@@ -203,10 +206,10 @@
         /// </summary>
         public void Dispose()
         {
-            foreach (var key in pageFactoryCache.Keys)
+            foreach (var key in PageFactoryCache.Keys)
             {
-                var factory = pageFactoryCache[key];
-                pageFactoryCache.Remove(key);
+                var factory = PageFactoryCache[key];
+                PageFactoryCache.Remove(key);
 
                 if (factory is IDisposable disposable)
                 {
@@ -214,5 +217,6 @@
                 }
             }
         }
+
     }
 }

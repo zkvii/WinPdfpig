@@ -13,8 +13,19 @@
     using Tokenization.Scanner;
     using Tokens;
 
-    internal class PageFactory : BasePageFactory<Page>
+    /// <summary>
+    /// a factory to create pages
+    /// </summary>
+    public class PageFactory : BasePageFactory<Page>
     {
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="pdfScanner"></param>
+        /// <param name="resourceStore"></param>
+        /// <param name="filterProvider"></param>
+        /// <param name="pageContentParser"></param>
+        /// <param name="parsingOptions"></param>
         public PageFactory(
             IPdfTokenScanner pdfScanner,
             IResourceStore resourceStore,

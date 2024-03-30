@@ -152,6 +152,7 @@
             pages.AddPageFactory<TPage, TPageFactory>();
         }
 
+
         /// <summary>
         /// Get the page with the specified page number (1 indexed).
         /// </summary>
@@ -314,5 +315,6 @@
                 isDisposed = true;
             }
         }
+
     }
 }
