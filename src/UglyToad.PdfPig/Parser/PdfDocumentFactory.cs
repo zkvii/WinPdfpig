@@ -65,8 +65,8 @@
                 throw;
             }
         }
-        
-        /// <summary>
+
+        /// <summary></summary>
         /// open a PDF document from a byte array
         /// 
         private static PdfDocument Open(IInputBytes inputBytes, ParsingOptions? options = null)
