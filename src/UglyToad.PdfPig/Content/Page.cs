@@ -91,7 +91,8 @@
         /// </summary>
         public Experimental ExperimentalAccess { get; }
 
-        internal Page(int number, DictionaryToken dictionary, MediaBox mediaBox, CropBox cropBox, PageRotationDegrees rotation, PageContent content,
+        internal Page(int number, DictionaryToken dictionary, MediaBox mediaBox, CropBox cropBox,
+            PageRotationDegrees rotation, PageContent content,
             AnnotationProvider annotationProvider,
             IPdfTokenScanner pdfScanner)
         {
@@ -216,10 +217,12 @@
                 // TO DO
                 //var annots = GetAnnotations().ToList();
 
-                return mcesOptional.GroupBy(oc => oc.Name).ToDictionary(g => g.Key!, g => (IReadOnlyList<OptionalContentGroupElement>)g.ToList());
+                return mcesOptional.GroupBy(oc => oc.Name).ToDictionary(g => g.Key!,
+                    g => (IReadOnlyList<OptionalContentGroupElement>)g.ToList());
             }
 
-            private void GetOptionalContentsRecursively(IReadOnlyList<MarkedContentElement>? markedContentElements, ref List<OptionalContentGroupElement> mcesOptional)
+            private void GetOptionalContentsRecursively(IReadOnlyList<MarkedContentElement>? markedContentElements,
+                ref List<OptionalContentGroupElement> mcesOptional)
             {
                 if (markedContentElements is null || markedContentElements.Count == 0)
                 {

@@ -65,7 +65,10 @@
                 throw;
             }
         }
-
+        
+        /// <summary>
+        /// open a PDF document from a byte array
+        /// 
         private static PdfDocument Open(IInputBytes inputBytes, ParsingOptions? options = null)
         {
             options ??= new ParsingOptions()
@@ -74,20 +77,12 @@
                 ClipPaths = false,
                 SkipMissingFonts = false
             };
-
+            // register a token scanner
             var tokenScanner = new CoreTokenScanner(inputBytes, true, useLenientParsing: options.UseLenientParsing);
 
-            var passwords = new List<string>();
+            var passwords = new List<string> { options.Password };
 
-            if (options.Password != null)
-            {
-                passwords.Add(options.Password);
-            }
-
-            if (options.Passwords != null)
-            {
-                passwords.AddRange(options.Passwords.Where(x => x != null));
-            }
+            passwords.AddRange(options.Passwords.Where(x => true));
 
             if (!passwords.Contains(string.Empty))
             {

@@ -20,7 +20,7 @@
         /// </summary>
         public const byte AsciiCarriageReturn = 13;
 
-        private static readonly HashSet<int> EndOfNameCharacters = new HashSet<int>
+        private static readonly HashSet<int> EndOfNameCharacters = new()
         {
             ' ',
             AsciiCarriageReturn,

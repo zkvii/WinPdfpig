@@ -26,7 +26,7 @@
         private readonly IReadOnlyDictionary<NameToken, IReadOnlyList<NameToken>> namedDictionaryRequiredKeys;
         private readonly IInputBytes inputBytes;
         private readonly bool usePdfDocEncoding;
-        private readonly List<(byte firstByte, ITokenizer tokenizer)> customTokenizers = new List<(byte, ITokenizer)>();
+        private readonly List<(byte firstByte, ITokenizer tokenizer)> customTokenizers = new();
         private readonly bool useLenientParsing;
 
         /// <summary>
@@ -58,31 +58,33 @@
         {
             this.inputBytes = inputBytes ?? throw new ArgumentNullException(nameof(inputBytes));
             this.usePdfDocEncoding = usePdfDocEncoding;
-            this.stringTokenizer = new StringTokenizer(usePdfDocEncoding);
-            this.arrayTokenizer = new ArrayTokenizer(usePdfDocEncoding);
-            this.dictionaryTokenizer = new DictionaryTokenizer(usePdfDocEncoding, useLenientParsing: useLenientParsing);
+            stringTokenizer = new StringTokenizer(usePdfDocEncoding);
+            arrayTokenizer = new ArrayTokenizer(usePdfDocEncoding);
+            dictionaryTokenizer = new DictionaryTokenizer(usePdfDocEncoding, useLenientParsing: useLenientParsing);
             this.scope = scope;
             this.namedDictionaryRequiredKeys = namedDictionaryRequiredKeys;
             this.useLenientParsing = useLenientParsing;
         }
 
         /// <inheritdoc />
+        /// read current token as the specific type T
         public bool TryReadToken<T>(out T token) where T : class, IToken
         {
-            token = default(T);
+            token = default;
 
             if (!MoveNext())
             {
                 return false;
             }
 
-            if (CurrentToken is T canCast)
+            if (CurrentToken is not T canCast)
             {
-                token = canCast;
-                return true;
+                return false;
             }
 
-            return false;
+            token = canCast;
+            return true;
+
         }
 
         /// <inheritdoc />
@@ -92,16 +94,18 @@
         }
 
         /// <inheritdoc />
+        /// token parse core logic
         public bool MoveNext()
         {
             var endAngleBracesRead = 0;
 
-            bool isSkippingSymbol = false;
+            var isSkippingSymbol = false;
+            // Loop through the input bytes until we find a token.
             while ((hasBytePreRead && !inputBytes.IsAtEnd()) || inputBytes.MoveNext())
             {
                 hasBytePreRead = false;
                 var currentByte = inputBytes.CurrentByte;
-                var c = (char) currentByte;
+                var c = (char) currentByte; // Convert to char for easier comparison.
 
                 ITokenizer tokenizer = null;
                 foreach (var customTokenizer in customTokenizers)
@@ -135,8 +139,8 @@
                         case '<':
                             var following = inputBytes.Peek();
                             if (following == '<')
+                                //parse << as a dictionary
                             {
-                                isSkippingSymbol = true;
                                 tokenizer = dictionaryTokenizer;
 
                                 if (namedDictionaryRequiredKeys != null
@@ -153,6 +157,7 @@
                             break;
                         case '>' when scope == ScannerScope.Dictionary:
                             endAngleBracesRead++;
+                            // parse >> as the end of a dictionary
                             if (endAngleBracesRead == 2)
                             {
                                 return false;

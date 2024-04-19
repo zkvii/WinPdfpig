@@ -4,6 +4,7 @@
 
     /// <summary>
     /// Scan input for PostScript/PDF tokens.
+    /// read token from the input.
     /// </summary>
     public interface ITokenScanner
     {

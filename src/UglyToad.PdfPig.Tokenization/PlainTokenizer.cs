@@ -6,9 +6,9 @@
 
     internal class PlainTokenizer : ITokenizer
     {
-        private readonly StringBuilder stringBuilder = new StringBuilder();
+        private readonly StringBuilder stringBuilder = new();
 
-        public bool ReadsNextByte { get; } = true;
+        public bool ReadsNextByte => true;
 
         public bool TryTokenize(byte currentByte, IInputBytes inputBytes, out IToken token)
         {
