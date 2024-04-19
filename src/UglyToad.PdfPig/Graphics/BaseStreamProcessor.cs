@@ -165,6 +165,7 @@
 
         /// <summary>
         /// Process the <see cref="IGraphicsStateOperation"/>s.
+        /// 
         /// </summary>
         protected void ProcessOperations(IReadOnlyList<IGraphicsStateOperation> operations)
         {

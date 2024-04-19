@@ -61,6 +61,7 @@
             throw new InvalidOperationException($"Could not find page factory of type '{typeof(IPageFactory<TPage>)}' for page type {typeof(TPage)}.");
         }
 
+        //parse page from page factory
         private TPage GetPage<TPage>(IPageFactory<TPage> pageFactory,
             int pageNumber,
             NamedDestinations namedDestinations,

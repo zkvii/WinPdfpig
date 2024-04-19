@@ -107,7 +107,7 @@
 
             var xrefValidator = new XrefOffsetValidator(parsingOptions.Logger);
 
-            // We're ok with this since our intent is to lazily load the cross reference table.
+            // We're ok with this since our intent is to lazily load the cross-reference table.
             // ReSharper disable once AccessToModifiedClosure
             var locationProvider = new ObjectLocationProvider(() => crossReferenceTable, inputBytes);
             var pdfScanner = new PdfTokenScanner(inputBytes, locationProvider, filterProvider, NoOpEncryptionHandler.Instance, parsingOptions);

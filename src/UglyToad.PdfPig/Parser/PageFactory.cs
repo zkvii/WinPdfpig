@@ -15,6 +15,7 @@
 
     /// <summary>
     /// a factory to create pages
+    /// 
     /// </summary>
     public class PageFactory : BasePageFactory<Page>
     {
@@ -36,6 +37,20 @@
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pageNumber"></param>
+        /// <param name="dictionary"></param>
+        /// <param name="namedDestinations"></param>
+        /// <param name="mediaBox"></param>
+        /// <param name="cropBox"></param>
+        /// <param name="userSpaceUnit"></param>
+        /// <param name="rotation"></param>
+        /// <param name="initialMatrix"></param>
+        /// <param name="operations"></param>
+        /// <returns></returns>
+        /// parse operations one after one
         protected override Page ProcessPage(int pageNumber,
             DictionaryToken dictionary,
             NamedDestinations namedDestinations,
@@ -52,7 +67,7 @@
                 namedDestinations,
                 ParsingOptions.Logger);
 
-            if (operations is null || operations.Count == 0)
+            if (operations.Count == 0)
             {
                 PageContent emptyContent = new PageContent(
                     Array.Empty<IGraphicsStateOperation>(),
